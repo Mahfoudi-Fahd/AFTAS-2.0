@@ -13,4 +13,5 @@ public interface AuthenticationService {
 
     AuthenticationResponse authenticate(AuthenticationRequest user);
 
+    AuthenticationResponse createMember(RegisterRequest user);
 }

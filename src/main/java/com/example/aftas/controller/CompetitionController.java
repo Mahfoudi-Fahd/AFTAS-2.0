@@ -9,6 +9,7 @@ import com.example.aftas.service.CompetitionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class CompetitionController {
   private final   CompetitionService competitionService;
 
     @PostMapping("/save")
+    @PreAuthorize("hasAuthority('CREATE_COMPETITION')")
     public ResponseEntity<ResponseMessage> save(@Valid @RequestBody CompetitionRequestDto competitionRequestDto) {
 
         Competition competition = competitionRequestDto.toCompetition();
@@ -34,16 +36,19 @@ public class CompetitionController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAuthority('VIEW_COMPETITIONS')")
     public Competition findById(Long id) {
         return competitionService.getCompetitionById(id);
     }
 
     @GetMapping("/code/{code}")
+    @PreAuthorize("hasAuthority('VIEW_COMPETITIONS')")
     public Competition findByCode(@PathVariable String code) {
         return competitionService.findByCode(code);
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('VIEW_COMPETITIONS')")
     public ResponseEntity findAll() {
         List<Competition> competitionList = competitionService.findAll();
         List<CompetitionResponseDto> competitionResponseDtoList = new ArrayList<>();
@@ -64,6 +69,7 @@ public class CompetitionController {
     }
 
     @GetMapping("/participants/{code}")
+    @PreAuthorize("hasAuthority('VIEW_COMPETITIONS')")
     public ResponseEntity findParticipantsInCompetition(@PathVariable String code) {
         List<Member> memberList = competitionService.findParticipantsInCompetition(code);
         return ResponseMessage.ok(memberList, "Participants retrieved successfully");
@@ -71,6 +77,7 @@ public class CompetitionController {
     }
 
     @GetMapping("/participants/not/{code}")
+    @PreAuthorize("hasAuthority('VIEW_COMPETITIONS')")
     public ResponseEntity findParticipantsNotInCompetition(@PathVariable String code) {
         List<Member> memberList = competitionService.findParticipantsNotInCompetition(code);
         return ResponseMessage.ok(memberList, "Participants retrieved successfully");

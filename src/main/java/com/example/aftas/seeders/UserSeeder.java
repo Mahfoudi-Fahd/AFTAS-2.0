@@ -1,8 +1,8 @@
 package com.example.aftas.seeders;
 
 
+import com.example.aftas.domain.Member;
 import com.example.aftas.domain.Role;
-import com.example.aftas.domain.User;
 import com.example.aftas.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -18,15 +18,15 @@ public class UserSeeder {
         }
     }
     public void seedUsers() {
-        List<User> users = List.of(
-                User.builder()
+        List<Member> users = List.of(
+                Member.builder()
                         .firstName("FAHD")
                         .lastName("FAHD")
                         .email("fahd@fahd.com")
                         .password("123456")
                         .role(Role.builder().id(2L).build())
                         .build(),
-                User.builder()
+                Member.builder()
                         .firstName("User")
                         .lastName("User")
                         .email("user@user.com")

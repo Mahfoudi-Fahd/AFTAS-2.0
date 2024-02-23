@@ -25,9 +25,6 @@ public class MainSeeder implements CommandLineRunner {
         if (roleRepository.count() == 0) {
             new RoleSeeder(roleRepository, authorityRepository).seedRoles();
         }
-        if (userRepository.count() == 0) {
-            new UserSeeder(userRepository).seedUsers();
-        }
         if (levelRepository.count() == 0) {
             new LevelSeeder(levelRepository).seedLevels();
         }

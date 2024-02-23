@@ -1,7 +1,6 @@
 package com.example.aftas.service.impl;
 
-import com.example.aftas.domain.User;
-
+import com.example.aftas.domain.Member;
 import com.example.aftas.dto.auth.AuthenticationRequest;
 import com.example.aftas.dto.auth.AuthenticationResponse;
 import com.example.aftas.dto.auth.RegisterRequest;
@@ -14,6 +13,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -31,14 +33,29 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new RuntimeException("Email already exists");
         }
-        var user = User.builder()
+        Integer number = userRepository.findMaxNumber();
+        if (number == null) {
+            number = 1;
+        } else {
+            number++;
+        }
+        var user = Member.builder()
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(roleService.findDefaultRole().orElse(null))
+                .identityDocumentTypeEnum(request.getIdentityDocumentTypeEnum())
+                .identityNumber(request.getIdentityDocumentNumber())
+                .nationality(request.getNationality())
+                .accessionDate(LocalDate.now())
+                .number(number)
+                .enabled(false)
                 .build();
+
+
         userRepository.save(user);
+
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
@@ -49,6 +66,37 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
         var user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).refreshToken(refreshToken).build();
+    }
+
+    @Override
+    public AuthenticationResponse createMember(RegisterRequest request) {
+    if (userRepository.existsByEmail(request.getEmail())) {
+            throw new RuntimeException("Email already exists");
+        }
+        Integer number = userRepository.findMaxNumber();
+        if (number == null) {
+            number = 1;
+        } else {
+            number++;
+        }
+        var user = Member.builder()
+                .firstName(request.getFirstName())
+                .lastName(request.getLastName())
+                .email(request.getEmail())
+                .password(passwordEncoder.encode("password"))
+                .role(roleService.findDefaultRole().orElse(null))
+                .identityDocumentTypeEnum(request.getIdentityDocumentTypeEnum())
+                .identityNumber(request.getIdentityDocumentNumber())
+                .number(number)
+                .accessionDate(LocalDate.now())
+                .enabled(true)
+                .build();
+
+
+        userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder().token(jwtToken).build();
     }

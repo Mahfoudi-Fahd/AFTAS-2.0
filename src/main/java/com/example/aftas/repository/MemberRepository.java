@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
@@ -24,4 +25,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
   Member findByIdentityNumber(String identityNumber);
 
   Member findMemberByNumber(Integer number);
+
+    Member findByEmail(String username);
 }

@@ -19,4 +19,6 @@ public interface MemberService {
     Member findMemberByNumber(Integer number);
 
     Member getMemberById(Long memberId);
+
+    Member enableMemberAccount(Long memberId);
 }

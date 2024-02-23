@@ -30,8 +30,13 @@ public class RoleSeeder implements CommandLineRunner {
                         .isDefault(true)
                         .build(),
                 Role.builder()
-                        .name("ROLE_ADMIN")
+                        .name("ROLE_MANAGER")
                         .authorities(authorityRepository.findAll())
+                        .isDefault(false)
+                        .build(),
+                Role.builder()
+                        .name("ROLE_JURY")
+                        .authorities(authorityRepository.findAllByName(List.of("CREATE_COMPETITION", "VIEW_COMPETI TION","DELETE_COMPETITION","UPDATE_COMPETITION")))
                         .isDefault(false)
                         .build()
         );

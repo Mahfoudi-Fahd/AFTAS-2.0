@@ -1,7 +1,7 @@
 package com.example.aftas.service.impl;
 
+import com.example.aftas.domain.Member;
 import com.example.aftas.domain.Role;
-import com.example.aftas.domain.User;
 import com.example.aftas.repository.UserRepository;
 import com.example.aftas.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,22 +19,22 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    public List<User> getAll() {
+    public List<Member> getAll() {
         List<String> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         if (authorities.contains("VIEW_USERS"))return userRepository.findAll();
         return null;
     }
 
     @Override
-    public Optional<User> getById(Long id) {
+    public Optional<Member> getById(Long id) {
         return userRepository.findById(id);
     }
 
     @Override
-    public User assignRole(Long id, Role role) {
+    public Member assignRole(Long id, Role role) {
         List<String> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         if (authorities.contains("ASSIGN_ROLE_TO_USER")){
-            User user = getById(id).orElse(null);
+            Member user = getById(id).orElse(null);
             if (user != null && role != null){
                 user.setRole(role);
                 return userRepository.save(user);
@@ -44,10 +44,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User update(User user, Long id) {
+    public Member update(Member user, Long id) {
         List<String> authorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
         if (authorities.contains("UPDATE_USERS") || SecurityContextHolder.getContext().getAuthentication().getName().equals(user.getEmail())){
-            User existingUser = getById(id).orElse(null);
+            Member existingUser = getById(id).orElse(null);
             if (existingUser != null){
                 existingUser.setEmail(user.getEmail());
                 existingUser.setFirstName(user.getFirstName());
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User loadAuthUser() {
+    public Member loadAuthUser() {
         return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getName()).orElseThrow();
     }
 }

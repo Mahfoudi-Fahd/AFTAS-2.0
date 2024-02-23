@@ -1,7 +1,7 @@
 package com.example.aftas.service;
 
+import com.example.aftas.domain.Member;
 import com.example.aftas.domain.Role;
-import com.example.aftas.domain.User;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -10,16 +10,16 @@ import java.util.Optional;
 @Component
 public interface UserService {
 
-    List<User> getAll();
+    List<Member> getAll();
 
-    Optional<User> getById(Long id);
+    Optional<Member> getById(Long id);
 
-    User assignRole(Long id, Role role);
+    Member assignRole(Long id, Role role);
 
-    User update(User user, Long id);
+    Member update(Member user, Long id);
 
     void delete(Long id);
 
-    User loadAuthUser();
+    Member loadAuthUser();
 
 }
