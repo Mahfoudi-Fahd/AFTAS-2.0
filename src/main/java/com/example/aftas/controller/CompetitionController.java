@@ -83,4 +83,11 @@ public class CompetitionController {
         return ResponseMessage.ok(memberList, "Participants retrieved successfully");
 
     }
+
+    @GetMapping("/member/{memberId}")
+//    @PreAuthorize("hasAuthority('VIEW_COMPETITIONS')")
+    public ResponseEntity getCompetitionByMemberId(@PathVariable Long memberId) {
+        Competition competition = competitionService.getCompetitionByMemberId(memberId);
+        return ResponseMessage.ok(CompetitionResponseDto.fromCompetition(competition), "Competition retrieved successfully");
+    }
 }

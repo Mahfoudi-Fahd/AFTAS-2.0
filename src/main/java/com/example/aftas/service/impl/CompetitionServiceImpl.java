@@ -2,7 +2,9 @@ package com.example.aftas.service.impl;
 
 import com.example.aftas.domain.Competition;
 import com.example.aftas.domain.Member;
+import com.example.aftas.domain.Ranking;
 import com.example.aftas.repository.CompetitionRepository;
+import com.example.aftas.repository.RankingRepository;
 import com.example.aftas.service.CompetitionService;
 import com.example.aftas.service.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Component
 @RequiredArgsConstructor
 
@@ -22,7 +25,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
    private final CompetitionRepository competitionRepository;
    private final MemberService memberService;
-
+   private final RankingRepository rankingRepository;
     @Override
     public Competition save(Competition competition) {
 
@@ -93,9 +96,14 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
 
-    private boolean competitionExistsWithSameDate(LocalDate date) {
+    public boolean competitionExistsWithSameDate(LocalDate date) {
         List<Competition> competitionsWithSameDate = competitionRepository.findByDate(date);
 
         return !competitionsWithSameDate.isEmpty();
+    }
+
+    public Competition getCompetitionByMemberId(Long memberId) {
+        Ranking ranking = rankingRepository.findByMemberId(memberId);
+        return ranking.getCompetition();
     }
 }

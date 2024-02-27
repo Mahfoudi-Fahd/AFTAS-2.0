@@ -19,4 +19,6 @@ public interface CompetitionService {
 
     List<Member> findParticipantsInCompetition(String code);
     List<Member> findParticipantsNotInCompetition(String code);
+
+    Competition getCompetitionByMemberId(Long memberId);
 }
